@@ -1,0 +1,138 @@
+import React, { useState } from 'react';
+import { useStore } from '../StoreContext';
+import { ArrowDownToLine, ArrowUpFromLine, LogOut, Send, Plus, Minus } from 'lucide-react';
+import { formatCurrency, formatDate } from '../utils';
+import { CargarModal, DebitarModal, TransferirModal } from './Modals';
+import { AIChat } from './AIChat';
+
+export const Dashboard: React.FC = () => {
+  const { state, logout } = useStore();
+  const { user, balance, transactions } = state;
+
+  const [activeModal, setActiveModal] = useState<'CARGAR' | 'DEBITAR' | 'TRANSFERIR' | null>(null);
+
+  if (!user) return null;
+
+  return (
+    <div className="min-h-screen bg-gray-50 flex flex-col items-center p-4 sm:p-6 relative">
+      <div className="w-full max-w-4xl flex flex-col gap-6">
+
+        
+        {/* Header */}
+        <header className="flex items-center justify-between bg-white p-4 sm:px-6 rounded-2xl shadow-sm">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center text-blue-700 font-bold text-lg">
+              {user.name.charAt(0).toUpperCase()}
+            </div>
+            <div>
+              <p className="text-sm text-gray-500">Hola,</p>
+              <h2 className="font-semibold text-gray-900">{user.name}</h2>
+            </div>
+          </div>
+          <button 
+            onClick={logout}
+            className="flex items-center gap-2 text-gray-500 hover:text-red-600 transition-colors p-2 rounded-lg hover:bg-red-50"
+          >
+            <LogOut className="w-5 h-5" />
+            <span className="hidden sm:inline font-medium text-sm">Cerrar sesión</span>
+          </button>
+        </header>
+
+        {/* Balance Card */}
+        <div className="bg-gradient-to-br from-blue-900 to-blue-700 rounded-3xl p-6 sm:p-10 text-white shadow-xl relative overflow-hidden">
+          <div className="absolute top-0 right-0 p-8 opacity-10">
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-48 w-48 -mr-10 -mt-10" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+          </div>
+          
+          <div className="relative z-10">
+            <p className="text-blue-200 text-lg font-medium mb-1">Saldo disponible</p>
+            <h1 className="text-4xl sm:text-6xl font-bold tracking-tight mb-8">
+              {formatCurrency(balance)}
+            </h1>
+
+            <div className="flex flex-wrap gap-4 mt-8">
+              <button 
+                onClick={() => setActiveModal('CARGAR')}
+                className="flex-1 min-w-[120px] bg-white/20 hover:bg-white/30 text-white backdrop-blur-md rounded-xl p-3 flex flex-col items-center justify-center gap-2 transition-all active:scale-95"
+              >
+                <div className="bg-white/20 p-2 rounded-full">
+                  <Plus className="w-5 h-5" />
+                </div>
+                <span className="font-medium text-sm">Cargar</span>
+              </button>
+              <button 
+                onClick={() => setActiveModal('DEBITAR')}
+                className="flex-1 min-w-[120px] bg-white/20 hover:bg-white/30 text-white backdrop-blur-md rounded-xl p-3 flex flex-col items-center justify-center gap-2 transition-all active:scale-95"
+              >
+                <div className="bg-white/20 p-2 rounded-full">
+                  <Minus className="w-5 h-5" />
+                </div>
+                <span className="font-medium text-sm">Debitar</span>
+              </button>
+              <button 
+                onClick={() => setActiveModal('TRANSFERIR')}
+                className="flex-1 min-w-[120px] bg-white text-blue-900 hover:bg-gray-100 rounded-xl p-3 flex flex-col items-center justify-center gap-2 transition-all active:scale-95 shadow-lg"
+              >
+                <div className="bg-blue-100 p-2 rounded-full">
+                  <Send className="w-5 h-5" />
+                </div>
+                <span className="font-medium text-sm">Transferir</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        {/* Transactions List */}
+        <div className="bg-white rounded-2xl shadow-sm p-4 sm:p-6 mb-8">
+          <div className="flex items-center justify-between mb-6">
+            <h3 className="text-xl font-semibold text-gray-900">Movimientos recientes</h3>
+          </div>
+          
+          {transactions.length === 0 ? (
+            <div className="text-center py-12">
+              <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-gray-100 text-gray-400 mb-4">
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                </svg>
+              </div>
+              <p className="text-gray-500 font-medium">Aún no hay movimientos</p>
+              <p className="text-sm text-gray-400 mt-1">Realiza tu primera carga para comenzar</p>
+            </div>
+          ) : (
+            <div className="space-y-4">
+              {transactions.map((tx) => (
+                <div key={tx.id} className="flex items-center justify-between p-4 rounded-xl border border-gray-100 hover:bg-gray-50 transition-colors group">
+                  <div className="flex items-center gap-4">
+                    <div className={`p-3 rounded-full ${tx.amount > 0 ? 'bg-green-100 text-green-600' : 'bg-red-100 text-red-600'}`}>
+                      {tx.amount > 0 ? <ArrowDownToLine className="w-5 h-5" /> : <ArrowUpFromLine className="w-5 h-5" />}
+                    </div>
+                    <div>
+                      <p className="font-semibold text-gray-900">{tx.description}</p>
+                      <p className="text-xs text-gray-500 mt-1">{formatDate(tx.date)}</p>
+                    </div>
+                  </div>
+                  <div className="text-right">
+                    <p className={`font-bold ${tx.amount > 0 ? 'text-green-600' : 'text-gray-900'}`}>
+                      {tx.amount > 0 ? '+' : ''}{formatCurrency(tx.amount)}
+                    </p>
+                    <p className="text-xs text-gray-500 mt-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                      Saldo: {formatCurrency(tx.balanceAfter)}
+                    </p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      </div>
+
+      <CargarModal isOpen={activeModal === 'CARGAR'} onClose={() => setActiveModal(null)} />
+      <DebitarModal isOpen={activeModal === 'DEBITAR'} onClose={() => setActiveModal(null)} />
+      <TransferirModal isOpen={activeModal === 'TRANSFERIR'} onClose={() => setActiveModal(null)} />
+      
+      <AIChat />
+    </div>
+  );
+};

@@ -1,0 +1,60 @@
+import { Contact, Transaction, User } from './types';
+
+export const DEMO_USER: User = {
+  id: 'usr_1',
+  name: 'Usuario Demo',
+  email: 'demo@boveda.com',
+};
+
+export const DEMO_PASSWORD = 'demo1234';
+
+export const MOCK_CONTACTS: Contact[] = [
+  { id: 'cnt_1', name: 'Juan Pérez', email: 'juan@example.com', accountNumber: '000123456' },
+  { id: 'cnt_2', name: 'María Gómez', email: 'maria@example.com', accountNumber: '000987654' },
+  { id: 'cnt_3', name: 'Carlos López', email: 'carlos@example.com', accountNumber: '000555555' },
+];
+
+export const DEMO_INITIAL_BALANCE = 150000;
+
+export const DEMO_TRANSACTIONS: Transaction[] = ([
+  {
+    id: 'tx_1',
+    type: 'CARGA',
+    description: 'Carga por transferencia',
+    amount: 200000,
+    date: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000).toISOString(),
+    balanceAfter: 200000,
+  },
+  {
+    id: 'tx_2',
+    type: 'DEBITO',
+    description: 'Pago servicio eléctrico',
+    amount: -15000,
+    date: new Date(Date.now() - 4 * 24 * 60 * 60 * 1000).toISOString(),
+    balanceAfter: 185000,
+  },
+  {
+    id: 'tx_3',
+    type: 'TRANSFERENCIA',
+    description: 'Envío a Juan',
+    amount: -5000,
+    date: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString(),
+    balanceAfter: 180000,
+  },
+  {
+    id: 'tx_4',
+    type: 'DEBITO',
+    description: 'Compra supermercado',
+    amount: -20000,
+    date: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000).toISOString(),
+    balanceAfter: 160000,
+  },
+  {
+    id: 'tx_5',
+    type: 'TRANSFERENCIA',
+    description: 'Envío a María',
+    amount: -10000,
+    date: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString(),
+    balanceAfter: 150000,
+  },
+] as Transaction[]).sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());

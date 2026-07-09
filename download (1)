@@ -1,0 +1,95 @@
+# Bóveda — Mockup de Billetera Digital
+
+Mockup funcional y autónomo de una billetera digital, desarrollado como pieza de referencia visual y de UX para la prueba técnica del Proyecto **Bóveda** (Magne Studios).
+
+> ⚠️ **Esto es un mockup.** No tiene backend ni base de datos. Toda la información es simulada y vive en memoria durante la sesión. La autenticación **no** valida contra ningún servidor y el estado se **reinicia al recargar** la página. No usar como base para producción.
+
+---
+
+## Qué es (y qué no es)
+
+- **Es:** una demo navegable de punta a punta —login, registro, dashboard y operaciones— pensada para mostrar el aspecto y el flujo del producto.
+- **No es:** el frontend que se conecta a la API real. Esa es una pieza distinta de la prueba: consume los endpoints que construye el candidato. No confundir ni entregar una por la otra.
+
+---
+
+## Stack
+
+- **React** + **Tailwind CSS**
+- Sin dependencias externas más allá de React (los íconos van como SVG inline)
+- Datos y sesión gestionados con estado de React (en memoria)
+
+---
+
+## Cómo ejecutarlo
+
+> Ajustá los comandos según cómo hayas exportado el proyecto desde Google AI Studio.
+
+Si es un proyecto con Vite / bundler estándar:
+
+```bash
+# 1. Instalar dependencias
+npm install
+
+# 2. Levantar el entorno de desarrollo
+npm run dev
+
+# 3. Abrir la URL que indica la consola (por defecto http://localhost:5173)
+```
+
+Si AI Studio lo exportó como un único archivo/componente, basta con montarlo en cualquier proyecto React (por ejemplo, pegándolo como `App.jsx` y renderizándolo desde `main.jsx`).
+
+---
+
+## Acceso
+
+Podés entrar de dos formas:
+
+**Usuario demo precargado**
+
+| Campo    | Valor              |
+| -------- | ------------------ |
+| Email    | `demo@boveda.com`  |
+| Password | `demo1234`         |
+
+**Registrando un usuario nuevo**
+
+Desde la pantalla de *Crear cuenta*: el usuario se crea en memoria, inicia sesión automáticamente y entra con una billetera nueva (saldo en cero, sin movimientos).
+
+---
+
+## Funcionalidades
+
+- **Login** con validación de formato (email válido, contraseña no vacía) y mensajes de error claros.
+- **Registro** con validación (email válido, contraseña de mínimo 6 caracteres y confirmación que debe coincidir).
+- **Dashboard** con el saldo como protagonista, formateado como moneda.
+- **Operaciones** (con simulación de latencia y spinner):
+  - **Cargar** saldo.
+  - **Debitar** saldo (no permite dejar el saldo en negativo).
+  - **Transferir** a un contacto (con validación de saldo suficiente).
+- **Historial de movimientos** en tiempo real, con ingresos en verde y egresos en rojo, ordenados del más reciente al más antiguo.
+- **Cerrar sesión**, que vuelve al login.
+
+---
+
+## Datos de ejemplo (seed)
+
+El usuario demo arranca con:
+
+- Saldo inicial de **$ 150.000**.
+- Entre 5 y 8 movimientos de ejemplo (cargas, débitos y transferencias) con fechas recientes y descripciones realistas.
+- Una lista de 3–4 contactos simulados disponibles en el modal de transferencia.
+
+---
+
+## Limitaciones (por ser mockup)
+
+- **Sin persistencia:** al recargar la página se pierden los cambios y se restablece el seed.
+- **Sin seguridad real:** la autenticación es simulada; no hay tokens, sesiones ni cifrado.
+- **Sin red:** no hay llamadas a APIs; la latencia es un retardo artificial para dar sensación de realismo.
+
+---
+
+## Contexto del proyecto
+
+Este mockup forma parte del material de la prueba técnica de **Desarrollador Backend** de Magne Studios. Su rol es ilustrar cómo luce y se siente la billetera; la lógica real (saldos, integridad, concurrencia) es lo que se evalúa por separado en el backend del candidato.
