@@ -45,7 +45,7 @@ router.post('/accounts/:id/deposit', async (req: Request, res: Response, next: N
   try {
     const { id } = req.params;
     const { amount } = req.body;
-    const idemKey = req.headers['idempotency-key'] as string | undefined;
+    const idemKey = (req.headers['idempotency-key'] as string) || null;
 
     await pool.query('SELECT deposit_funds($1, $2, $3)', [id, amount, idemKey]);
     const result = await pool.query('SELECT * FROM accounts WHERE id = $1', [id]);
@@ -59,7 +59,7 @@ router.post('/accounts/:id/withdraw', async (req: Request, res: Response, next: 
   try {
     const { id } = req.params;
     const { amount } = req.body;
-    const idemKey = req.headers['idempotency-key'] as string | undefined;
+    const idemKey = (req.headers['idempotency-key'] as string) || null;
 
     await pool.query('SELECT withdraw_funds($1, $2, $3)', [id, amount, idemKey]);
     const result = await pool.query('SELECT * FROM accounts WHERE id = $1', [id]);
@@ -72,7 +72,7 @@ router.post('/accounts/:id/withdraw', async (req: Request, res: Response, next: 
 router.post('/transfers', async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { fromId, toId, amount } = req.body;
-    const idemKey = req.headers['idempotency-key'] as string | undefined;
+    const idemKey = (req.headers['idempotency-key'] as string) || null;
 
     await pool.query('SELECT transfer_funds($1, $2, $3, $4)', [fromId, toId, amount, idemKey]);
     res.status(200).json({ success: true, message: 'Transferencia completada con éxito' });
